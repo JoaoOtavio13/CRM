@@ -1,6 +1,7 @@
 from django.db import transaction
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.shortcuts import render, redirect, get_object_or_404
 from core.models import Empresa
 from .models import Venda
@@ -13,12 +14,18 @@ def registrar_venda(request):
         venda = Venda()
         formset = ItemVendaFormSet(request.POST, instance=venda)
         if formset.is_valid():
-            with transaction.atomic():
-                venda.save()
-                formset.instance = venda
-                formset.save()
-                venda.refresh_from_db()
+            try:
+                with transaction.atomic():
+                    venda.save()
+                    formset.instance = venda
+                    formset.save()
+                    venda.refresh_from_db()
+            except ValidationError as exc:
+                messages.error(request, exc.messages[0] if exc.messages else 'Não foi possível registrar a venda.')
+                return render(request, 'vendas/registrar_venda.html', {'formset': formset})
             return redirect('venda_detail', pk=venda.pk)
+        else:
+            messages.error(request, 'Corrija os itens da venda antes de salvar.')
     else:
         formset = ItemVendaFormSet(instance=Venda())
     return render(request, 'vendas/registrar_venda.html', {'formset': formset})
