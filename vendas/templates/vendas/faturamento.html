@@ -1,12 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Faturamento Total</h1>
-    <p>O faturamento total é: R$ {{ total_faturamento }}</p>
-</body>
-</html>
+{% extends 'core/base.html' %}
+
+{% block title %}Faturamento | Vendas CRM{% endblock %}
+
+{% block content %}
+<div class="card">
+    <p class="eyebrow">Faturamento</p>
+    <h2>Receita consolidada</h2>
+    <div class="stat">
+        <span class="muted">Faturamento total</span>
+        <strong>R$ {{ total_faturamento }}</strong>
+    </div>
+    <p class="muted">Empresa: {{ empresa.nome }}</p>
+</div>
+{% endblock %}

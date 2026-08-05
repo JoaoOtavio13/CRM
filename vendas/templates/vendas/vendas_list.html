@@ -1,22 +1,29 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Lista de Vendas</title>
-</head>
-<body>
-    <h1>Vendas</h1>
-    <a href="{% url 'registrar_venda' %}">Nova Venda</a>
-    <ul>
+{% extends 'core/base.html' %}
+
+{% block title %}Vendas | Vendas CRM{% endblock %}
+
+{% block content %}
+<section>
+    <div class="actions" style="justify-content: space-between; margin-bottom: 18px;">
+        <div>
+            <p class="eyebrow">Vendas</p>
+            <h2>Historico de vendas</h2>
+        </div>
+        <a class="action-link" href="{% url 'registrar_venda' %}">Nova venda</a>
+    </div>
+
+    <ul class="list-stack">
         {% for venda in vendas %}
-            <li>
-                <a href="{% url 'venda_detail' venda.pk %}">Venda #{{ venda.pk }}</a>
-                - Total: R$ {{ venda.total }}
-                - <a href="{% url 'venda_delete' venda.pk %}">Excluir</a>
+            <li class="list-item">
+                <div>
+                    <strong><a href="{% url 'venda_detail' venda.pk %}">Venda #{{ venda.pk }}</a></strong>
+                    <div class="meta">Total: R$ {{ venda.total }}</div>
+                </div>
+                <a class="action-link danger" href="{% url 'venda_delete' venda.pk %}">Excluir</a>
             </li>
         {% empty %}
-            <li>Nenhuma venda registrada.</li>
+            <li class="list-item">Nenhuma venda registrada.</li>
         {% endfor %}
     </ul>
-</body>
-</html>
+</section>
+{% endblock %}

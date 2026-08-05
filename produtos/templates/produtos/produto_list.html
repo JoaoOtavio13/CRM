@@ -1,0 +1,33 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Produtos | Vendas CRM{% endblock %}
+
+{% block content %}
+<section>
+	<div class="actions" style="justify-content: space-between; margin-bottom: 18px;">
+		<div>
+			<p class="eyebrow">Produtos</p>
+			<h2>Catalogo de produtos</h2>
+		</div>
+		<a class="action-link" href="{% url 'produto_create' %}">Novo produto</a>
+	</div>
+
+	<ul class="list-stack">
+		{% for produto in produtos %}
+			<li class="list-item">
+				<div>
+					<strong>{{ produto.nome }}</strong>
+					<div class="meta">Estoque: {{ produto.estoque }} | Preco: R$ {{ produto.preco }}</div>
+				</div>
+				<div class="actions">
+					<a class="action-link" href="{% url 'produto_detail' produto.pk %}">Detalhes</a>
+					<a class="action-link" href="{% url 'produto_update' produto.pk %}">Editar</a>
+					<a class="action-link danger" href="{% url 'produto_delete' produto.pk %}">Excluir</a>
+				</div>
+			</li>
+		{% empty %}
+			<li class="list-item">Nenhum produto cadastrado.</li>
+		{% endfor %}
+	</ul>
+</section>
+{% endblock %}

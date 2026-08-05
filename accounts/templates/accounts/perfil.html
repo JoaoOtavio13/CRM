@@ -1,14 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil</title>
-</head>
-<body>
-    <h1>Perfil</h1>
-    <p>Usuário: {{ user.username }}</p>
-    <p>Email: {{ user.email }}</p>
-    <p><a href="{% url 'logout' %}">Sair</a></p>
-</body>
-</html>
+{% extends 'core/base.html' %}
+
+{% block title %}Perfil | Vendas CRM{% endblock %}
+
+{% block content %}
+<div class="card">
+    <p class="eyebrow">Perfil</p>
+    <h2>Dados do usuario</h2>
+    <div class="grid cols-2">
+        <div>
+            <p class="muted">Usuario</p>
+            <p>{{ user.username }}</p>
+        </div>
+        <div>
+            <p class="muted">Email</p>
+            <p>{{ user.email|default:'Nao informado' }}</p>
+        </div>
+    </div>
+    <div class="actions">
+        <a class="action-link danger" href="{% url 'logout' %}">Sair</a>
+    </div>
+</div>
+{% endblock %}

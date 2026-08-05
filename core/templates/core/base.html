@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Vendas CRM{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/app.css' %}">
+</head>
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <div class="brand-lockup">
+                <div class="brand-mark">VC</div>
+                <div>
+                    <p class="eyebrow">Vendas CRM</p>
+                    <h1>Gestao comercial</h1>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="{% url 'index' %}">Inicio</a>
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <a href="{% url 'produto_list' %}">Produtos</a>
+                <a href="{% url 'vendas_list' %}">Vendas</a>
+                <a href="{% url 'faturamento' %}">Faturamento</a>
+                <a href="{% url 'perfil' %}">Perfil</a>
+            </nav>
+        </header>
+
+        {% if messages %}
+            <section class="messages">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </section>
+        {% endif %}
+
+        <main class="content-card">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

@@ -1,13 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Dashboard</h1>
-    <p>Total de Produtos: {{ total_produtos }}</p>
-    <p>Total de Vendas: {{ total_vendas }}</p>
-</body>
-</html>
+{% extends 'core/base.html' %}
+
+{% block title %}Dashboard | Vendas CRM{% endblock %}
+
+{% block content %}
+<section>
+    <p class="eyebrow">Dashboard</p>
+    <h2>Indicadores principais</h2>
+    <div class="stats">
+        <div class="stat">
+            <span class="muted">Total de Produtos</span>
+            <strong>{{ total_produtos }}</strong>
+        </div>
+        <div class="stat">
+            <span class="muted">Total de Vendas</span>
+            <strong>{{ total_vendas }}</strong>
+        </div>
+    </div>
+</section>
+{% endblock %}

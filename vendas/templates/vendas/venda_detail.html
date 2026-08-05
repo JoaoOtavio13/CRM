@@ -1,21 +1,39 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Detalhe da Venda</title>
-</head>
-<body>
-    <h1>Detalhe da Venda</h1>
-    <p><strong>Data:</strong> {{ venda.data_venda }}</p>
-    <p><strong>Total:</strong> R$ {{ venda.total }}</p>
-    <h2>Itens</h2>
-    <ul>
+{% extends 'core/base.html' %}
+
+{% block title %}Detalhe da venda | Vendas CRM{% endblock %}
+
+{% block content %}
+<div class="card">
+    <p class="eyebrow">Venda</p>
+    <h2>Venda #{{ venda.pk }}</h2>
+    <div class="grid cols-2">
+        <div>
+            <p class="muted">Data</p>
+            <p>{{ venda.data_venda }}</p>
+        </div>
+        <div>
+            <p class="muted">Total</p>
+            <p>R$ {{ venda.total }}</p>
+        </div>
+    </div>
+
+    <h3>Itens</h3>
+    <ul class="list-stack">
         {% for item in venda.itens.all %}
-            <li>{{ item.produto.nome }} - {{ item.quantidade }} unidade(s) - R$ {{ item.subtotal }}</li>
+            <li class="list-item">
+                <div>
+                    <strong>{{ item.produto.nome }}</strong>
+                    <div class="meta">{{ item.quantidade }} unidade(s)</div>
+                </div>
+                <span>R$ {{ item.subtotal }}</span>
+            </li>
         {% empty %}
-            <li>Nenhum item nesta venda.</li>
+            <li class="list-item">Nenhum item nesta venda.</li>
         {% endfor %}
     </ul>
-    <a href="{% url 'vendas_list' %}">Voltar</a>
-</body>
-</html>
+
+    <div class="actions">
+        <a class="action-link" href="{% url 'vendas_list' %}">Voltar</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,16 +1,18 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Excluir Venda</title>
-</head>
-<body>
-    <h1>Excluir Venda</h1>
-    <p>Tem certeza que deseja excluir a venda: <strong>{{ venda }}</strong>?</p>
+{% extends 'core/base.html' %}
+
+{% block title %}Excluir venda | Vendas CRM{% endblock %}
+
+{% block content %}
+<div class="card">
+    <p class="eyebrow">Exclusao</p>
+    <h2>Excluir venda</h2>
+    <p>Tem certeza que deseja excluir a venda <strong>#{{ venda.pk }}</strong>?</p>
     <form method="post">
         {% csrf_token %}
-        <button type="submit">Confirmar Exclusão</button>
+        <div class="actions">
+            <button type="submit" class="danger">Confirmar exclusao</button>
+            <a class="action-link" href="{% url 'vendas_list' %}">Cancelar</a>
+        </div>
     </form>
-    <a href="{% url 'vendas_list' %}">Cancelar</a>
-</body>
-</html>
+</div>
+{% endblock %}

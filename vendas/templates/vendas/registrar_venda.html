@@ -1,22 +1,26 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Registrar Venda</title>
-</head>
-<body>
-    <h1>Registrar Venda</h1>
+{% extends 'core/base.html' %}
+
+{% block title %}Registrar venda | Vendas CRM{% endblock %}
+
+{% block content %}
+<div class="card">
+    <p class="eyebrow">Vendas</p>
+    <h2>Registrar nova venda</h2>
     <form method="post">
         {% csrf_token %}
         {{ formset.management_form }}
-        {% for item_form in formset %}
-            <fieldset>
-                <legend>Produto {{ forloop.counter }}</legend>
-                {{ item_form.as_p }}
-            </fieldset>
-        {% endfor %}
-        <button type="submit">Salvar</button>
+        <div class="grid">
+            {% for item_form in formset %}
+                <fieldset>
+                    <legend>Item {{ forloop.counter }}</legend>
+                    {{ item_form.as_p }}
+                </fieldset>
+            {% endfor %}
+        </div>
+        <div class="actions">
+            <button type="submit">Salvar venda</button>
+            <a class="action-link" href="{% url 'vendas_list' %}">Voltar</a>
+        </div>
     </form>
-    <a href="{% url 'vendas_list' %}">Voltar</a>
-</body>
-</html>
+</div>
+{% endblock %}

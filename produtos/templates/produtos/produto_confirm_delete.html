@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Excluir produto | Vendas CRM{% endblock %}
+
+{% block content %}
+<div class="card">
+	<p class="eyebrow">Exclusao</p>
+	<h2>Excluir produto</h2>
+	<p>Tem certeza que deseja excluir <strong>{{ produto.nome }}</strong>?</p>
+	<form method="post">
+		{% csrf_token %}
+		<div class="actions">
+			<button type="submit" class="danger">Confirmar exclusao</button>
+			<a class="action-link" href="{% url 'produto_list' %}">Cancelar</a>
+		</div>
+	</form>
+</div>
+{% endblock %}

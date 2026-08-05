@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Detalhe do produto | Vendas CRM{% endblock %}
+
+{% block content %}
+<div class="card">
+	<p class="eyebrow">Produto</p>
+	<h2>{{ produto.nome }}</h2>
+	<div class="grid cols-2">
+		<div>
+			<p class="muted">Descricao</p>
+			<p>{{ produto.descricao }}</p>
+		</div>
+		<div>
+			<p class="muted">Preco</p>
+			<p>R$ {{ produto.preco }}</p>
+			<p class="muted">Estoque: {{ produto.estoque }}</p>
+		</div>
+	</div>
+	<div class="actions">
+		<a class="action-link" href="{% url 'produto_update' produto.pk %}">Editar</a>
+		<a class="action-link danger" href="{% url 'produto_delete' produto.pk %}">Excluir</a>
+		<a class="action-link" href="{% url 'produto_list' %}">Voltar</a>
+	</div>
+</div>
+{% endblock %}

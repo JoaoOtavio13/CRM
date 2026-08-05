@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sobre</title>
-</head>
-<body>
-    <h1>Sobre</h1>
-    <p>Página sobre o sistema.</p>
-</body>
-</html>
+{% extends 'core/base.html' %}
+
+{% block title %}Sobre | Vendas CRM{% endblock %}
+
+{% block content %}
+<div class="card">
+    <p class="eyebrow">Sobre</p>
+    <h2>Sistema de gestao comercial</h2>
+    <p class="muted">Projeto em Django para cadastro de produtos, controle de estoque, registro de vendas e acompanhamento de faturamento.</p>
+</div>
+{% endblock %}

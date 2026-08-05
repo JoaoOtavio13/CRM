@@ -1,11 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+{% extends 'core/base.html' %}
+
+{% block title %}Inicio | Vendas CRM{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-panel">
+        <p class="eyebrow">Resumo executivo</p>
+        <h2 class="hero-title">Controle o CRM em um unico lugar.</h2>
+        <p class="hero-copy">Cadastre produtos, registre vendas com varios itens e acompanhe o faturamento da empresa em uma interface limpa, moderna e padronizada.</p>
+        <div class="chip-row">
+            <span class="chip">Fluxo simples</span>
+            <span class="chip">Estoque em tempo real</span>
+            <span class="chip">Faturamento consolidado</span>
+        </div>
+        <div class="actions" style="margin-top: 22px;">
+            <a class="action-link" href="{% url 'produto_list' %}">Ver produtos</a>
+            <a class="action-link" href="{% url 'vendas_list' %}">Ver vendas</a>
+        </div>
+    </div>
+
+    <div class="hero-aside">
+        <div class="mini-panel">
+            <p class="eyebrow">Acesso rapido</p>
+            <h3>Fluxo centralizado</h3>
+            <p class="muted">Use o menu superior para navegar entre dashboard, produtos, vendas, faturamento e perfil.</p>
+        </div>
+        <div class="mini-panel">
+            <p class="eyebrow">Operacao</p>
+            <h3>Interface consistente</h3>
+            <p class="muted">Todas as telas compartilham a mesma linguagem visual, com foco em leitura rapida e acao direta.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

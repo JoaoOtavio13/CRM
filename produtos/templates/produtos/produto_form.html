@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Produto | Vendas CRM{% endblock %}
+
+{% block content %}
+<div class="card">
+	<p class="eyebrow">Produto</p>
+	<h2>Formulario de produto</h2>
+	<form method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<div class="actions">
+			<button type="submit">Salvar</button>
+			<a class="action-link" href="{% url 'produto_list' %}">Voltar</a>
+		</div>
+	</form>
+</div>
+{% endblock %}
