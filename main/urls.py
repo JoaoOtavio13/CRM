@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from vendas import views as vendas_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,4 +24,5 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('produtos/', include('produtos.urls')),
     path('vendas/', include('vendas.urls')),
+    path('faturamento/', vendas_views.faturamento, name='faturamento_root'),
 ]

@@ -1,12 +1,22 @@
 from django import forms
+from django.forms import inlineformset_factory
 from .models import Venda, ItemVenda
 
 class VendaForm(forms.ModelForm):
     class Meta:
         model = Venda
-        fields = ['produto', 'quantidade']
+        fields = []
 
 class ItemVendaForm(forms.ModelForm):
     class Meta:
         model = ItemVenda
-        fields = ['venda', 'produto', 'quantidade', 'preco_unitario']
+        fields = ['produto', 'quantidade']
+
+
+ItemVendaFormSet = inlineformset_factory(
+    Venda,
+    ItemVenda,
+    form=ItemVendaForm,
+    extra=2,
+    can_delete=False,
+)

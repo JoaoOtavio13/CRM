@@ -1,19 +1,23 @@
 from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 from produtos.forms import ProdutoForm
 from .models import Produto
 
 
+@login_required
 def produto_list_view(request):
     produtos = Produto.objects.all()
     return render(request, 'produtos/produto_list.html', {'produtos': produtos})
 
 
+@login_required
 def produto_detail_view(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
     return render(request, 'produtos/produto_detail.html', {'produto': produto})
 
 
+@login_required
 def produto_update_view(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
     if request.method == 'POST':
@@ -26,6 +30,7 @@ def produto_update_view(request, pk):
     return render(request, 'produtos/produto_form.html', {'form': form})
 
 
+@login_required
 def produto_create(request):
     if request.method == 'POST':
         form = ProdutoForm(request.POST)
@@ -37,6 +42,7 @@ def produto_create(request):
     return render(request, 'produtos/produto_form.html', {'form': form})
 
 
+@login_required
 def produto_delete(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
     if request.method == 'POST':

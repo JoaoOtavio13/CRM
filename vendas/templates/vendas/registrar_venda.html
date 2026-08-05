@@ -8,7 +8,13 @@
     <h1>Registrar Venda</h1>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ formset.management_form }}
+        {% for item_form in formset %}
+            <fieldset>
+                <legend>Produto {{ forloop.counter }}</legend>
+                {{ item_form.as_p }}
+            </fieldset>
+        {% endfor %}
         <button type="submit">Salvar</button>
     </form>
     <a href="{% url 'vendas_list' %}">Voltar</a>

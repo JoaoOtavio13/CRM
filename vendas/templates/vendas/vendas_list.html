@@ -10,7 +10,8 @@
     <ul>
         {% for venda in vendas %}
             <li>
-                <a href="{% url 'venda_detail' venda.pk %}">{{ venda }}</a>
+                <a href="{% url 'venda_detail' venda.pk %}">Venda #{{ venda.pk }}</a>
+                - Total: R$ {{ venda.total }}
                 - <a href="{% url 'venda_delete' venda.pk %}">Excluir</a>
             </li>
         {% empty %}
