@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhe da Venda</title>
+</head>
+<body>
+    <h1>Detalhe da Venda</h1>
+    <p><strong>Produto:</strong> {{ venda.produto.nome }}</p>
+    <p><strong>Quantidade:</strong> {{ venda.quantidade }}</p>
+    <p><strong>Data:</strong> {{ venda.data_venda }}</p>
+    <p><strong>Total:</strong> R$ {{ venda.total }}</p>
+    <a href="{% url 'vendas_list' %}">Voltar</a>
+</body>
+</html>

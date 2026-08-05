@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Excluir Venda</title>
+</head>
+<body>
+    <h1>Excluir Venda</h1>
+    <p>Tem certeza que deseja excluir a venda: <strong>{{ venda }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmar Exclusão</button>
+    </form>
+    <a href="{% url 'vendas_list' %}">Cancelar</a>
+</body>
+</html>

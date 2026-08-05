@@ -1,10 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from .models import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.shortcuts import redirect
 
 
 # Create your views here.
@@ -35,10 +34,8 @@ def register(request):
         form = RegisterForm()
     return render(request, 'accounts/register.html', {'form': form})
 
+@login_required
 def perfil(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    else:
-        user = request.user
-        context = {'user': user,}
-        return render(request, 'accounts/perfil.html', context)
+    user = request.user
+    context = {'user': user,}
+    return render(request, 'accounts/perfil.html', context)
