@@ -31,7 +31,7 @@ class Venda(models.Model):
             super().save(update_fields=['total'])
 
     def save(self, *args, **kwargs):
-        if self.pk is None and self.total is None:
+        if self.pk is None:
             self.total = Decimal('0.00')
         super().save(*args, **kwargs)
 

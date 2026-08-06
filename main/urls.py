@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from vendas import views as vendas_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,7 +25,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('produtos/', include('produtos.urls')),
     path('vendas/', include('vendas.urls')),
-    path('faturamento/', vendas_views.faturamento, name='faturamento_root'),
     # API
     path('api/', include('accounts.api_urls')),
     path('api/', include('produtos.api_urls')),
