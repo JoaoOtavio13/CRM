@@ -26,10 +26,18 @@ def logout_view(request):
 
 def register(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
-            Perfil.objects.create(user=user, nome=form.cleaned_data['nome'])
+            Perfil.objects.create(
+                user=user,
+                nome=form.cleaned_data['nome'],
+                telefone=form.cleaned_data.get('telefone', ''),
+                cargo=form.cleaned_data.get('cargo', ''),
+                cpf=form.cleaned_data.get('cpf', ''),
+                empresa=form.cleaned_data.get('empresa', ''),
+                imagem=form.cleaned_data.get('imagem'),
+            )
             return redirect('login')
     else:
         form = RegisterForm()
