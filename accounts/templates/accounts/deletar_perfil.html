@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Deletar Perfil | Vendas CRM{% endblock %}
+
+{% block content %}
+<div class="card">
+    <p class="eyebrow">Perfil</p>
+    <h2>Deletar conta</h2>
+    <p class="muted">Tem certeza que deseja deletar o perfil de <strong>{{ user.username }}</strong>? Essa ação não pode ser desfeita.</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="actions">
+            <button type="submit" class="danger">Deletar</button>
+            <a class="action-link" href="{% url 'perfil' %}">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Editar Perfil | Vendas CRM{% endblock %}
+
+{% block content %}
+<div class="card">
+    <p class="eyebrow">Perfil</p>
+    <h2>Editar dados do perfil</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="actions">
+            <button type="submit">Salvar</button>
+            <a class="action-link" href="{% url 'perfil' %}">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

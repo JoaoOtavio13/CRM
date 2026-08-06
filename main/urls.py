@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from vendas import views as vendas_views
 
 urlpatterns = [
@@ -25,4 +27,11 @@ urlpatterns = [
     path('produtos/', include('produtos.urls')),
     path('vendas/', include('vendas.urls')),
     path('faturamento/', vendas_views.faturamento, name='faturamento_root'),
+    # API
+    path('api/', include('accounts.api_urls')),
+    path('api/', include('produtos.api_urls')),
+    path('api/', include('vendas.api_urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

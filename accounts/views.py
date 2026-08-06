@@ -29,6 +29,7 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            Perfil.objects.create(user=user, nome=form.cleaned_data['nome'])
             return redirect('login')
     else:
         form = RegisterForm()
@@ -37,5 +38,29 @@ def register(request):
 @login_required
 def perfil(request):
     user = request.user
+    Perfil.objects.get_or_create(user=user)
     context = {'user': user,}
     return render(request, 'accounts/perfil.html', context)
+
+@login_required
+def editar_perfil(request):
+    user = request.user
+    perfil, created = Perfil.objects.get_or_create(user=user)
+    if request.method == 'POST':
+        form = PerfilForm(request.POST, request.FILES, instance=perfil)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Perfil atualizado com sucesso.')
+            return redirect('perfil')
+    else:
+        form = PerfilForm(instance=perfil)
+    return render(request, 'accounts/editar_perfil.html', {'form': form})
+
+@login_required
+def deletar_perfil(request):
+    user = request.user
+    if request.method == 'POST':
+        user.delete()
+        messages.success(request, 'Perfil deletado com sucesso.')
+        return redirect('index')
+    return render(request, 'accounts/deletar_perfil.html', {'user': user})

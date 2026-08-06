@@ -8,6 +8,30 @@
     <h2>Dados do usuario</h2>
     <div class="grid cols-2">
         <div>
+            <p class="muted">Imagem</p>
+            {% if user.perfil.imagem %}
+                <img src="{{ user.perfil.imagem.url }}" alt="Imagem do perfil" class="profile-image">
+            {% else %}
+                <p>Nenhuma imagem</p>
+            {% endif %}
+        </div>
+        <div>
+            <p class="muted">Nome</p>
+            <p>{{ user.perfil.nome|default:'Nao informado' }}</p>
+        </div>
+        <div>
+            <p class="muted">Telefone</p>
+            <p>{{ user.perfil.telefone|default:'Nao informado' }}</p>
+        </div>
+        <div>
+            <p class="muted">Empresa</p>
+            <p>{{ user.perfil.empresa|default:'Nao informado' }}</p>
+        </div>
+        <div>
+            <p class="muted">Cargo</p>
+            <p>{{ user.perfil.cargo|default:'Nao informado' }}</p>
+        </div>
+        <div>
             <p class="muted">Usuario</p>
             <p>{{ user.username }}</p>
         </div>
@@ -15,8 +39,14 @@
             <p class="muted">Email</p>
             <p>{{ user.email|default:'Nao informado' }}</p>
         </div>
+        <div>
+            <p class="muted">CPF</p>
+            <p>{{ user.perfil.cpf|default:'Nao informado' }}</p>
+        </div>
     </div>
     <div class="actions">
+        <a class="action-link" href="{% url 'editar_perfil' %}">Editar Perfil</a>
+        <a class="action-link danger" href="{% url 'deletar_perfil' %}">Deletar Perfil</a>
         <a class="action-link danger" href="{% url 'logout' %}">Sair</a>
     </div>
 </div>
