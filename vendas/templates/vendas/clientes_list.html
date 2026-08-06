@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Clientes | Vendas CRM{% endblock %}
+
+{% block content %}
+<section>
+    <div class="actions" style="justify-content: space-between; margin-bottom: 18px;">
+        <div>
+            <p class="eyebrow">Clientes</p>
+            <h2>Lista de clientes</h2>
+        </div>
+        <a class="action-link" href="{% url 'cadastro_cliente' %}">Novo cliente</a>
+    </div>
+
+    <ul class="list-stack">
+        {% for cliente in clientes %}
+            <li class="list-item">
+                <div>
+                    <strong>{{ cliente.nome }}</strong>
+                    <div class="meta">{{ cliente.email }}</div>
+                    {% if cliente.telefone %}<div class="meta">Tel: {{ cliente.telefone }}</div>{% endif %}
+                    {% if cliente.endereco %}<div class="meta">{{ cliente.endereco }}</div>{% endif %}
+                </div>
+            </li>
+        {% empty %}
+            <li class="list-item">Nenhum cliente cadastrado.</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

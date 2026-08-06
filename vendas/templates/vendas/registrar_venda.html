@@ -8,6 +8,7 @@
     <h2>Registrar nova venda</h2>
     <form method="post">
         {% csrf_token %}
+        {{ venda_form.as_p }}
         {{ formset.management_form }}
         <div class="grid">
             {% for item_form in formset %}

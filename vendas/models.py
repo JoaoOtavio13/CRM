@@ -1,12 +1,28 @@
 from decimal import Decimal
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.db.models import Sum
 from produtos.models import Produto
 # Create your models here.
+
+User = get_user_model()
+
+class Cliente(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='clientes', null=True, blank=True)
+    nome = models.CharField(max_length=100)
+    email = models.EmailField()
+    telefone = models.CharField(max_length=15, blank=True, null=True)
+    endereco = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.nome
+    
 class Venda(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='vendas', null=True, blank=True)
     data_venda = models.DateTimeField(auto_now_add=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, editable=False, default=Decimal('0.00'))
+    cliente = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='vendas')
 
     def atualizar_total(self):
         total = self.itens.aggregate(total=Sum('subtotal'))['total'] or Decimal('0.00')
@@ -75,4 +91,3 @@ class ItemVenda(models.Model):
 
     def __str__(self):
         return f"{self.quantidade} x {self.produto.nome}"
-

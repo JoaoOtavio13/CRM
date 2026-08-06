@@ -6,5 +6,8 @@ urlpatterns = [
     path('nova/', views.registrar_venda, name='registrar_venda'),
     path('<int:pk>/', views.venda_detail, name='venda_detail'),
     path('<int:pk>/excluir/', views.venda_delete, name='venda_delete'),
-    path('faturamento/', views.faturamento, name='faturamento')
+    path('faturamento/', views.faturamento, name='faturamento'),
+    path('clientes/', views.listar_clientes, name='clientes_list'),
+    path('clientes/cadastro/', views.cadastro_cliente, name='cadastro_cliente'),
+
 ]
