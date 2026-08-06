@@ -49,7 +49,7 @@ ItemVendaFormSet = inlineformset_factory(
     Venda,
     ItemVenda,
     form=ItemVendaForm,
-    extra=2,
+    extra=1,
     can_delete=False,
 )
 

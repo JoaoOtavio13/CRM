@@ -6,22 +6,84 @@
 <div class="card">
     <p class="eyebrow">Vendas</p>
     <h2>Registrar nova venda</h2>
-    <form method="post">
+    <form method="post" id="venda-form">
         {% csrf_token %}
         {{ venda_form.as_p }}
         {{ formset.management_form }}
-        <div class="grid">
+        <div class="grid" id="itens-container">
             {% for item_form in formset %}
-                <fieldset>
+                <fieldset class="item-formset">
                     <legend>Item {{ forloop.counter }}</legend>
                     {{ item_form.as_p }}
+                    <button type="button" class="remover-item" onclick="removerItem(this)">Remover item</button>
                 </fieldset>
             {% endfor %}
         </div>
         <div class="actions">
+            <button type="button" id="adicionar-item" class="action-link">+ Adicionar item</button>
             <button type="submit">Salvar venda</button>
             <a class="action-link" href="{% url 'vendas_list' %}">Voltar</a>
         </div>
     </form>
 </div>
+
+<script>
+    const container = document.getElementById('itens-container');
+    const totalForms = document.getElementById('id_{{ formset.prefix }}-TOTAL_FORMS');
+    const addButton = document.getElementById('adicionar-item');
+
+    function atualizarIndices() {
+        const fieldsets = container.querySelectorAll('.item-formset');
+        fieldsets.forEach((fieldset, index) => {
+            fieldset.querySelector('legend').textContent = `Item ${index + 1}`;
+            fieldset.querySelectorAll('input, select, textarea').forEach(input => {
+                const name = input.name;
+                if (name) {
+                    const newName = name.replace(/-\d+-/, `-${index}-`);
+                    input.name = newName;
+                    input.id = `id_${newName}`;
+                }
+            });
+            fieldset.querySelectorAll('label').forEach(label => {
+                const forAttr = label.getAttribute('for');
+                if (forAttr) {
+                    label.setAttribute('for', forAttr.replace(/-\d+-/, `-${index}-`));
+                }
+            });
+        });
+        totalForms.value = fieldsets.length;
+    }
+
+    function adicionarItem() {
+        const total = parseInt(totalForms.value);
+        const novoFieldset = container.querySelector('.item-formset').cloneNode(true);
+
+        // Limpar valores do novo fieldset
+        novoFieldset.querySelectorAll('input, select, textarea').forEach(input => {
+            if (input.type !== 'hidden') {
+                input.value = '';
+            }
+        });
+
+        // Limpar erros
+        novoFieldset.querySelectorAll('.errorlist').forEach(el => el.remove());
+
+        container.appendChild(novoFieldset);
+        totalForms.value = total + 1;
+        atualizarIndices();
+    }
+
+    function removerItem(button) {
+        const fieldsets = container.querySelectorAll('.item-formset');
+        if (fieldsets.length > 1) {
+            button.closest('.item-formset').remove();
+            atualizarIndices();
+        } else {
+            alert('A venda deve ter pelo menos um item.');
+        }
+    }
+
+    addButton.addEventListener('click', adicionarItem);
+    atualizarIndices();
+</script>
 {% endblock %}
