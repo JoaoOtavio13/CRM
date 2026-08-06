@@ -1,9 +1,13 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
 
 # Create your models here.
 
+User = get_user_model()
+
 class Produto(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='produtos', null=True, blank=True)
     nome = models.CharField(max_length=100)
     descricao = models.TextField()
     preco = models.DecimalField(max_digits=10, decimal_places=2)

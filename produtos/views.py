@@ -1,25 +1,24 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-
 from produtos.forms import ProdutoForm
 from .models import Produto
 
 
 @login_required
 def produto_list_view(request):
-    produtos = Produto.objects.all()
+    produtos = Produto.objects.filter(usuario=request.user)
     return render(request, 'produtos/produto_list.html', {'produtos': produtos})
 
 
 @login_required
 def produto_detail_view(request, pk):
-    produto = get_object_or_404(Produto, pk=pk)
+    produto = get_object_or_404(Produto, pk=pk, usuario=request.user)
     return render(request, 'produtos/produto_detail.html', {'produto': produto})
 
 
 @login_required
 def produto_update_view(request, pk):
-    produto = get_object_or_404(Produto, pk=pk)
+    produto = get_object_or_404(Produto, pk=pk, usuario=request.user)
     if request.method == 'POST':
         form = ProdutoForm(request.POST, instance=produto)
         if form.is_valid():
@@ -35,7 +34,9 @@ def produto_create(request):
     if request.method == 'POST':
         form = ProdutoForm(request.POST)
         if form.is_valid():
-            produto = form.save()
+            produto = form.save(commit=False)
+            produto.usuario = request.user
+            produto.save()
             return redirect('produto_detail', pk=produto.pk)
     else:
         form = ProdutoForm()
@@ -44,7 +45,7 @@ def produto_create(request):
 
 @login_required
 def produto_delete(request, pk):
-    produto = get_object_or_404(Produto, pk=pk)
+    produto = get_object_or_404(Produto, pk=pk, usuario=request.user)
     if request.method == 'POST':
         produto.delete()
         return redirect('produto_list')
