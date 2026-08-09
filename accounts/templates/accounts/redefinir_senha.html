@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Redefinir Senha | Vendas CRM{% endblock %}
+
+{% block content %}
+<div class="grid cols-2">
+    <div class="card">
+        <p class="eyebrow">Acesso</p>
+        <h2>Redefina sua senha</h2>
+        <p class="muted">Informe o e-mail cadastrado e enviaremos um link para redefinir sua senha.</p>
+    </div>
+    <div class="card">
+        <h2>Redefinir Senha</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="email">E-mail</label>
+            <input type="email" name="email" id="email" required>
+            <button type="submit">Enviar link de redefinição</button>
+        </form>
+        <p class="muted">Lembrou a senha? <a href="{% url 'login' %}">Faça login</a></p>
+    </div>
+</div>
+{% endblock %}
