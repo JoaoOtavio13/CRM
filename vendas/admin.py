@@ -3,7 +3,7 @@ from .models import *
 # Register your models here.
 @admin.register(Venda)
 class VendaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'usuario', 'cliente', 'data_venda', 'total')
+    list_display = ('id', 'numero', 'usuario', 'cliente', 'data_venda', 'total')
     list_filter = ('data_venda', 'usuario', 'cliente')
     search_fields = ('usuario__username', 'cliente__nome')
 

@@ -6,7 +6,7 @@
 <div class="card">
     <p class="eyebrow">Exclusao</p>
     <h2>Excluir venda</h2>
-    <p>Tem certeza que deseja excluir a venda <strong>#{{ venda.pk }}</strong>?</p>
+    <p>Tem certeza que deseja excluir a venda <strong>#{{ venda.numero }}</strong>?</p>
     <form method="post">
         {% csrf_token %}
         <div class="actions">

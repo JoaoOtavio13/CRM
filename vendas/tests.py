@@ -79,6 +79,40 @@ class VendaListAPITests(TestCase):
         self.assertEqual(len(response.data), 0)
 
 
+class VendaNumeroSequencialTests(TestCase):
+    def setUp(self):
+        self.usuario1 = User.objects.create_user(username='usuario1', password='senha_segura_123')
+        self.usuario2 = User.objects.create_user(username='usuario2', password='senha_segura_123')
+
+    def test_numero_venda_sequencial_por_usuario(self):
+        venda1_u1 = Venda.objects.create(usuario=self.usuario1)
+        venda2_u1 = Venda.objects.create(usuario=self.usuario1)
+        venda1_u2 = Venda.objects.create(usuario=self.usuario2)
+
+        self.assertEqual(venda1_u1.numero, 1)
+        self.assertEqual(venda2_u1.numero, 2)
+        self.assertEqual(venda1_u2.numero, 1)
+
+    def test_numero_venda_continua_apos_exclusao(self):
+        venda1_u1 = Venda.objects.create(usuario=self.usuario1)
+        venda2_u1 = Venda.objects.create(usuario=self.usuario1)
+        venda1_u1.delete()
+
+        venda3_u1 = Venda.objects.create(usuario=self.usuario1)
+        self.assertEqual(venda3_u1.numero, 3)
+
+    def test_numero_venda_independente_entre_usuarios(self):
+        venda1_u1 = Venda.objects.create(usuario=self.usuario1)
+        venda1_u2 = Venda.objects.create(usuario=self.usuario2)
+        venda2_u2 = Venda.objects.create(usuario=self.usuario2)
+        venda2_u1 = Venda.objects.create(usuario=self.usuario1)
+
+        self.assertEqual(venda1_u1.numero, 1)
+        self.assertEqual(venda1_u2.numero, 1)
+        self.assertEqual(venda2_u2.numero, 2)
+        self.assertEqual(venda2_u1.numero, 2)
+
+
 class VendaEstoqueTests(TestCase):
     def test_nao_permite_venda_quando_estoque_eh_insuficiente(self):
         User = get_user_model()

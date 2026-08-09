@@ -20,9 +20,16 @@ class Cliente(models.Model):
     
 class Venda(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='vendas', null=True, blank=True)
+    numero = models.PositiveIntegerField(editable=False, null=True, blank=True)
     data_venda = models.DateTimeField(auto_now_add=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, editable=False, default=Decimal('0.00'))
     cliente = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='vendas')
+
+    class Meta:
+        ordering = ['-data_venda']
+        constraints = [
+            models.UniqueConstraint(fields=['usuario', 'numero'], name='unique_venda_numero_por_usuario')
+        ]
 
     def atualizar_total(self):
         total = self.itens.aggregate(total=Sum('subtotal'))['total'] or Decimal('0.00')
@@ -33,6 +40,9 @@ class Venda(models.Model):
     def save(self, *args, **kwargs):
         if self.pk is None:
             self.total = Decimal('0.00')
+            if self.numero is None:
+                ultima_venda = Venda.objects.filter(usuario=self.usuario).order_by('-numero').first()
+                self.numero = (ultima_venda.numero + 1) if ultima_venda else 1
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
@@ -44,7 +54,7 @@ class Venda(models.Model):
 
 
     def __str__(self):
-        return f"Venda #{self.pk or 'nova'} em {self.data_venda}"
+        return f"Venda #{self.numero or 'nova'} em {self.data_venda}"
 
 class ItemVenda(models.Model):
     venda = models.ForeignKey(Venda, on_delete=models.CASCADE, related_name='itens')

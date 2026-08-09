@@ -16,7 +16,7 @@
         {% for venda in vendas %}
             <li class="list-item">
                 <div>
-                    <strong><a href="{% url 'venda_detail' venda.pk %}">Venda #{{ venda.pk }}</a></strong>
+                    <strong><a href="{% url 'venda_detail' venda.pk %}">Venda #{{ venda.numero }}</a></strong>
                     <div class="meta">Total: R$ {{ venda.total }}</div>
                 </div>
                 <a class="action-link danger" href="{% url 'venda_delete' venda.pk %}">Excluir</a>

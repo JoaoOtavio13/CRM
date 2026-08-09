@@ -24,5 +24,5 @@ class VendaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Venda
-        fields = ('id', 'usuario', 'data_venda', 'total', 'cliente', 'cliente_nome', 'itens')
-        read_only_fields = ('id', 'usuario', 'data_venda', 'total')
+        fields = ('id', 'numero', 'usuario', 'data_venda', 'total', 'cliente', 'cliente_nome', 'itens')
+        read_only_fields = ('id', 'numero', 'usuario', 'data_venda', 'total')
