@@ -29,6 +29,8 @@ urlpatterns = [
     path('api/', include('accounts.api_urls')),
     path('api/', include('produtos.api_urls')),
     path('api/', include('vendas.api_urls')),
+    # EMAIL
+    path('email/', include('envia_email.urls')),
 ]
 
 if settings.DEBUG:
