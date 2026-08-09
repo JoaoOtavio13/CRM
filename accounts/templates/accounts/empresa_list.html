@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Empresas | Vendas CRM{% endblock %}
+
+{% block content %}
+<section>
+	<div class="actions" style="justify-content: space-between; margin-bottom: 18px;">
+		<div>
+			<p class="eyebrow">Empresas</p>
+			<h2>Lista de empresas</h2>
+		</div>
+		<a class="action-link" href="{% url 'empresa_create' %}">Nova empresa</a>
+	</div>
+
+	<ul class="list-stack">
+		{% for empresa in empresas %}
+			<li class="list-item">
+				<div>
+					<strong>{{ empresa.nome }}</strong>
+					<div class="meta">CNPJ: {{ empresa.cnpj }} | Telefone: {{ empresa.telefone|default:'Nao informado' }}</div>
+				</div>
+				<div class="actions">
+					<a class="action-link" href="{% url 'empresa_update' empresa.pk %}">Editar</a>
+					<a class="action-link danger" href="{% url 'empresa_delete' empresa.pk %}">Excluir</a>
+				</div>
+			</li>
+		{% empty %}
+			<li class="list-item">Nenhuma empresa cadastrada.</li>
+		{% endfor %}
+	</ul>
+</section>
+{% endblock %}

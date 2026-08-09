@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Categorias | Vendas CRM{% endblock %}
+
+{% block content %}
+<section>
+	<div class="actions" style="justify-content: space-between; margin-bottom: 18px;">
+		<div>
+			<p class="eyebrow">Categorias</p>
+			<h2>Lista de categorias</h2>
+		</div>
+		<a class="action-link" href="{% url 'categoria_create' %}">Nova categoria</a>
+	</div>
+
+	<ul class="list-stack">
+		{% for categoria in categorias %}
+			<li class="list-item">
+				<div>
+					<strong>{{ categoria.nome }}</strong>
+					<div class="meta">{{ categoria.descricao|default:'Sem descricao' }}</div>
+				</div>
+				<div class="actions">
+					<a class="action-link" href="{% url 'editar_categoria' categoria.pk %}">Editar</a>
+					<a class="action-link danger" href="{% url 'categoria_delete' categoria.pk %}">Excluir</a>
+				</div>
+			</li>
+		{% empty %}
+			<li class="list-item">Nenhuma categoria cadastrada.</li>
+		{% endfor %}
+	</ul>
+</section>
+{% endblock %}

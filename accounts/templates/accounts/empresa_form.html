@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Empresa | Vendas CRM{% endblock %}
+
+{% block content %}
+<div class="card">
+	<p class="eyebrow">Empresa</p>
+	<h2>{% if form.instance.pk %}Editar empresa{% else %}Nova empresa{% endif %}</h2>
+	<form method="post">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<div class="actions">
+			<button type="submit">Salvar</button>
+			<a class="action-link" href="{% url 'empresa_list' %}">Voltar</a>
+		</div>
+	</form>
+</div>
+{% endblock %}

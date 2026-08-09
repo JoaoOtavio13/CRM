@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Categoria | Vendas CRM{% endblock %}
+
+{% block content %}
+<div class="card">
+	<p class="eyebrow">Categoria</p>
+	<h2>{% if categoria %}Editar categoria{% else %}Nova categoria{% endif %}</h2>
+	<form method="post">
+		{% csrf_token %}
+		<label for="id_nome">Nome</label>
+		<input type="text" id="id_nome" name="nome" value="{{ categoria.nome|default:'' }}" required>
+		<label for="id_descricao">Descricao</label>
+		<textarea id="id_descricao" name="descricao">{{ categoria.descricao|default:'' }}</textarea>
+		<div class="actions">
+			<button type="submit">Salvar</button>
+			<a class="action-link" href="{% url 'categoria_list' %}">Voltar</a>
+		</div>
+	</form>
+</div>
+{% endblock %}
