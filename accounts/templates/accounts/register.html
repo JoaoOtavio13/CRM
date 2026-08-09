@@ -7,17 +7,94 @@
     <div class="card">
         <p class="eyebrow">Cadastro</p>
         <h2>Crie sua conta</h2>
-        <p class="muted">Depois do cadastro, entre no sistema para acessar o CRM.</p>
+        <p class="muted">Preencha seus dados pessoais e os dados da sua empresa.</p>
+        <p class="muted">Se a empresa já existir no sistema, seus dados serão associados a ela.</p>
     </div>
     <div class="card">
         <h2>Registro</h2>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
+
+            <h3 class="form-section-title">Dados do usuário</h3>
+            <label for="id_username">Usuário</label>
+            {{ form.username }}
+            {% if form.username.errors %}<div class="error">{{ form.username.errors }}</div>{% endif %}
+
+            <label for="id_email">E-mail</label>
+            {{ form.email }}
+            {% if form.email.errors %}<div class="error">{{ form.email.errors }}</div>{% endif %}
+
+            <label for="id_nome">Nome</label>
+            {{ form.nome }}
+
+            <label for="id_telefone">Telefone</label>
+            {{ form.telefone }}
+
+            <label for="id_cargo">Cargo</label>
+            {{ form.cargo }}
+
+            <label for="id_cpf">CPF</label>
+            {{ form.cpf }}
+
+            <label for="id_imagem">Imagem</label>
+            {{ form.imagem }}
+
+            <h3 class="form-section-title">Dados da empresa</h3>
+            <label for="id_empresa_nome">Nome da empresa</label>
+            {{ form.empresa_nome }}
+            {% if form.empresa_nome.help_text %}
+                <p class="muted" style="font-size: 0.85em; margin-top: 4px;">{{ form.empresa_nome.help_text }}</p>
+            {% endif %}
+
+            <label for="id_cnpj">CNPJ</label>
+            {{ form.cnpj }}
+            {% if form.cnpj.help_text %}
+                <p class="muted" style="font-size: 0.85em; margin-top: 4px;">{{ form.cnpj.help_text }}</p>
+            {% endif %}
+
+            <label for="id_endereco">Endereço</label>
+            {{ form.endereco }}
+
+            <label for="id_telefone_empresa">Telefone da empresa</label>
+            {{ form.telefone_empresa }}
+
+            <label for="id_email_empresa">E-mail da empresa</label>
+            {{ form.email_empresa }}
+
+            <h3 class="form-section-title">Senha</h3>
+            <label for="id_password1">Senha</label>
+            <div class="password-field">
+                {{ form.password1 }}
+                <button type="button" class="password-toggle" aria-label="Mostrar senha">
+                    <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display: none;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                    </svg>
+                </button>
+            </div>
+            {% if form.password1.errors %}<div class="error">{{ form.password1.errors }}</div>{% endif %}
+
+            <label for="id_password2">Confirmar senha</label>
+            <div class="password-field">
+                {{ form.password2 }}
+                <button type="button" class="password-toggle" aria-label="Mostrar senha">
+                    <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display: none;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                    </svg>
+                </button>
+            </div>
+            {% if form.password2.errors %}<div class="error">{{ form.password2.errors }}</div>{% endif %}
+
             <button type="submit">Registrar</button>
         </form>
         <p class="muted">Ja tem conta? <a href="{% url 'login' %}">Faça login</a></p>
-        <!-- <p>Esqueceu sua senha? <a href="{% url 'password_reset' %}">Redefinir senha</a></p> -->
     </div>
 </div>
 {% endblock %}
