@@ -40,5 +40,18 @@
             {% block content %}{% endblock %}
         </main>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.password-toggle').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var input = this.parentElement.querySelector('input[type="password"], input[type="text"]');
+                    var isPassword = input.type === 'password';
+                    input.type = isPassword ? 'text' : 'password';
+                    this.querySelector('.eye-open').style.display = isPassword ? 'none' : 'block';
+                    this.querySelector('.eye-closed').style.display = isPassword ? 'block' : 'none';
+                });
+            });
+        });
+    </script>
 </body>
 </html>
