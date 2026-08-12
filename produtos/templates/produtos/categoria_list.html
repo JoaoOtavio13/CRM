@@ -20,7 +20,7 @@
 					<div class="meta">{{ categoria.descricao|default:'Sem descricao' }}</div>
 				</div>
 				<div class="actions">
-					<a class="action-link" href="{% url 'editar_categoria' categoria.pk %}">Editar</a>
+					<a class="action-link editar" href="{% url 'editar_categoria' categoria.pk %}">Editar</a>
 					<a class="action-link danger" href="{% url 'categoria_delete' categoria.pk %}">Excluir</a>
 				</div>
 			</li>

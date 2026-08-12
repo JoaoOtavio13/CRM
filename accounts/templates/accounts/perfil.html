@@ -25,7 +25,12 @@
         </div>
         <div>
             <p class="muted">Empresa</p>
-            <p>{{ user.perfil.empresa|default:'Nao informado' }}</p>
+            <p>
+                {{ user.perfil.empresa|default:admin_empresa|default:'Nao informado' }}
+                {% if user.perfil.empresa and admin_empresa and user.perfil.empresa != admin_empresa %}
+                    <span class="muted">(Admin: {{ admin_empresa.nome }})</span>
+                {% endif %}
+            </p>
         </div>
         <div>
             <p class="muted">Cargo</p>
@@ -45,9 +50,10 @@
         </div>
     </div>
     <div class="actions">
-        <a class="action-link" href="{% url 'editar_perfil' %}">Editar Perfil</a>
+        <a class="action-link editar" href="{% url 'editar_perfil' %}">Editar Perfil</a>
+        <a class="action-link promover" href="{% url 'promover_admin' %}">Promover Admin</a>
         <a class="action-link danger" href="{% url 'deletar_perfil' %}">Deletar Perfil</a>
-        <a class="action-link danger" href="{% url 'logout' %}">Sair</a>
+        <a class="action-link sair" href="{% url 'logout' %}">Sair</a>
     </div>
 </div>
 {% endblock %}

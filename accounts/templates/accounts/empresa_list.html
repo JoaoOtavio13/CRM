@@ -20,7 +20,7 @@
 					<div class="meta">CNPJ: {{ empresa.cnpj }} | Telefone: {{ empresa.telefone|default:'Nao informado' }}</div>
 				</div>
 				<div class="actions">
-					<a class="action-link" href="{% url 'empresa_update' empresa.pk %}">Editar</a>
+					<a class="action-link editar" href="{% url 'empresa_update' empresa.pk %}">Editar</a>
 					<a class="action-link danger" href="{% url 'empresa_delete' empresa.pk %}">Excluir</a>
 				</div>
 			</li>

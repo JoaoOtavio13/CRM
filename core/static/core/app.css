@@ -10,6 +10,15 @@
     --accent: #f6b34b;
     --danger: #ff6b6b;
     --success: #43d17f;
+    /* Cores de prioridade para ações */
+    --prio-editar-bg: rgba(98, 208, 255, 0.18);
+    --prio-editar-text: #e8f7ff;
+    --prio-promover-bg: rgba(246, 179, 75, 0.2);
+    --prio-promover-text: #ffedcc;
+    --prio-deletar-bg: rgba(239, 68, 68, 0.18);
+    --prio-deletar-text: #ffe0e0;
+    --prio-sair-bg: rgba(255, 107, 107, 0.18);
+    --prio-sair-text: #ffd6d6;
     --border: rgba(159, 176, 195, 0.16);
     --shadow: 0 28px 60px rgba(2, 8, 23, 0.42);
     --shadow-soft: 0 12px 24px rgba(2, 8, 23, 0.22);
@@ -143,7 +152,12 @@ input[type="submit"] {
     border-radius: 999px;
     padding: 0.8rem 1rem;
     font: inherit;
+    color: var(--text);
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
 }
 
@@ -493,18 +507,58 @@ legend {
 .action-link {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(180deg, rgba(98, 208, 255, 0.18), rgba(98, 208, 255, 0.1));
+    background: rgba(159, 176, 195, 0.08);
     color: var(--text);
 }
 
+/* Ação: Editar (prioridade segura) */
+.action-link.editar,
+button.editar {
+    background: linear-gradient(180deg, var(--prio-editar-bg), rgba(98, 208, 255, 0.1));
+    color: var(--prio-editar-text);
+}
+
+.action-link.editar:hover,
+button.editar:hover {
+    border-color: rgba(98, 208, 255, 0.7);
+}
+
+/* Ação: Promover (prioridade alta / administrativa) */
+.action-link.promover,
+button.promover {
+    background: linear-gradient(180deg, var(--prio-promover-bg), rgba(246, 179, 75, 0.1));
+    color: var(--prio-promover-text);
+}
+
+.action-link.promover:hover,
+button.promover:hover {
+    border-color: rgba(246, 179, 75, 0.7);
+}
+
+/* Ação: Deletar / Excluir (prioridade crítica / destrutiva) */
 .action-link.danger,
 .danger {
-    background: rgba(239, 68, 68, 0.15);
+    background: linear-gradient(180deg, var(--prio-deletar-bg), rgba(239, 68, 68, 0.1));
+    color: var(--prio-deletar-text) !important;
+    border-color: rgba(239, 68, 68, 0.35);
 }
 
 .action-link.danger:hover,
 .danger:hover {
-    border-color: rgba(255, 107, 107, 0.5);
+    border-color: rgba(255, 107, 107, 0.7);
+}
+
+/* Ação: Sair (risco médio) */
+.action-link.sair,
+button.sair {
+    background: linear-gradient(180deg, var(--prio-sair-bg), rgba(255, 107, 107, 0.1));
+    color: var(--prio-sair-text);
+    border-color: rgba(255, 107, 107, 0.3);
+}
+
+.action-link.sair:hover,
+button.sair:hover {
+    border-color: rgba(255, 107, 107, 0.7);
 }
 
 .muted {

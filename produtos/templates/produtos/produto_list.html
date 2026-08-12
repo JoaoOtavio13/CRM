@@ -9,7 +9,12 @@
 			<p class="eyebrow">Produtos</p>
 			<h2>Catalogo de produtos</h2>
 		</div>
-		<a class="action-link" href="{% url 'produto_create' %}">Novo produto</a>
+		<div class="actions">
+			<a class="action-link" href="{% url 'categoria_list' %}">Categorias</a>
+			{% if is_admin %}
+				<a class="action-link" href="{% url 'produto_create' %}">Novo produto</a>
+			{% endif %}
+		</div>
 	</div>
 
 	<ul class="list-stack">
@@ -18,11 +23,16 @@
 				<div>
 					<strong>{{ produto.nome }}</strong>
 					<div class="meta">Estoque: {{ produto.estoque }} | Preco: R$ {{ produto.preco }}</div>
+					{% if produto.categoria %}
+						<div class="meta">Categoria: {{ produto.categoria.nome }}</div>
+					{% endif %}
 				</div>
 				<div class="actions">
 					<a class="action-link" href="{% url 'produto_detail' produto.pk %}">Detalhes</a>
-					<a class="action-link" href="{% url 'produto_update' produto.pk %}">Editar</a>
-					<a class="action-link danger" href="{% url 'produto_delete' produto.pk %}">Excluir</a>
+					{% if is_admin %}
+						<a class="action-link editar" href="{% url 'produto_update' produto.pk %}">Editar</a>
+						<a class="action-link danger" href="{% url 'produto_delete' produto.pk %}">Excluir</a>
+					{% endif %}
 				</div>
 			</li>
 		{% empty %}

@@ -13,7 +13,7 @@
 		<label for="id_descricao">Descricao</label>
 		<textarea id="id_descricao" name="descricao">{{ categoria.descricao|default:'' }}</textarea>
 		<div class="actions">
-			<button type="submit">Salvar</button>
+            <button type="submit" class="editar">Salvar</button>
 			<a class="action-link" href="{% url 'categoria_list' %}">Voltar</a>
 		</div>
 	</form>

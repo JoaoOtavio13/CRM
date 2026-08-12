@@ -10,7 +10,7 @@
         {% csrf_token %}
         {{ form.as_p }}
         <div class="actions">
-            <button type="submit">Salvar</button>
+            <button type="submit" class="editar">Salvar</button>
             <a class="action-link" href="{% url 'perfil' %}">Cancelar</a>
         </div>
     </form>
