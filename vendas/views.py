@@ -81,7 +81,29 @@ def cadastro_cliente(request):
             cliente.usuario = request.user
             cliente.save()
             messages.success(request, 'Cliente cadastrado com sucesso.')
-            return redirect('vendas_list')
+            return redirect('clientes_list')
     else:
         form = ClienteForm()
     return render(request, 'vendas/cadastro_cliente.html', {'form': form})
+
+@login_required
+def editar_cliente(request, pk):
+    cliente = get_object_or_404(Cliente, pk=pk, usuario=request.user)
+    if request.method == 'POST':
+        form = ClienteForm(request.POST, instance=cliente)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Cliente atualizado com sucesso.')
+            return redirect('clientes_list')
+    else:
+        form = ClienteForm(instance=cliente)
+    return render(request, 'vendas/editar_cliente.html', {'form': form, 'cliente': cliente})
+
+@login_required
+def deletar_cliente(request, pk):
+    cliente = get_object_or_404(Cliente, pk=pk, usuario=request.user)
+    if request.method == 'POST':
+        cliente.delete()
+        messages.success(request, 'Cliente deletado com sucesso.')
+        return redirect('clientes_list')
+    return render(request, 'vendas/deletar_cliente.html', {'cliente': cliente})
