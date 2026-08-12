@@ -4,6 +4,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from .forms import buscar_ou_criar_empresa
+from .models import Perfil
 from .serializers import RegisterSerializer, UserSerializer
 
 
@@ -13,6 +15,16 @@ def register_api(request):
     serializer = RegisterSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
+
+        # Busca ou cria a empresa (case-insensitive, anti-duplicação)
+        empresa_nome = serializer.validated_data.get('empresa_nome', '').strip()
+        empresa = buscar_ou_criar_empresa(empresa_nome)
+
+        # Atualiza o perfil com a empresa
+        perfil = Perfil.objects.get(user=user)
+        perfil.empresa = empresa
+        perfil.save(update_fields=['empresa'])
+
         refresh = RefreshToken.for_user(user)
         return Response({
             'user': UserSerializer(user).data,

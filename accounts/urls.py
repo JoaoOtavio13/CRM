@@ -14,4 +14,5 @@ urlpatterns = [
     path('empresas/nova/', views.empresa_create, name='empresa_create'),
     path('empresas/<int:pk>/editar/', views.empresa_update, name='empresa_update'),
     path('empresas/<int:pk>/excluir/', views.empresa_delete, name='empresa_delete'),
+    path('promover-admin/', views.promover_admin, name='promover_admin'),
 ]

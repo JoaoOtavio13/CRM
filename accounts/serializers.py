@@ -14,10 +14,14 @@ class UserSerializer(serializers.ModelSerializer):
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
     nome = serializers.CharField(max_length=100, required=False, allow_blank=True)
+    empresa_nome = serializers.CharField(max_length=100, required=True, allow_blank=False, error_messages={
+        'blank': 'O campo empresa é obrigatório.',
+        'required': 'O campo empresa é obrigatório.',
+    })
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'nome')
+        fields = ('id', 'username', 'email', 'password', 'nome', 'empresa_nome')
 
     def create(self, validated_data):
         nome = validated_data.pop('nome', '')

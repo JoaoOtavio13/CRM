@@ -36,19 +36,22 @@ def register(request):
         if form.is_valid():
             user = form.save()
 
-            # Processa a empresa (cria se não existir)
+            # Processa a empresa (busca ou cria se não existir)
             nome_empresa = form.cleaned_data.get('empresa_nome', '').strip()
-            empresa = None
-            if nome_empresa:
-                empresa, created = Empresa.objects.get_or_create(
-                    nome=nome_empresa,
-                    defaults={
-                        'cnpj': form.cleaned_data.get('cnpj', ''),
-                        'endereco': form.cleaned_data.get('endereco', ''),
-                        'telefone': form.cleaned_data.get('telefone_empresa', ''),
-                        'email': form.cleaned_data.get('email_empresa', ''),
-                    },
-                )
+            empresa = buscar_ou_criar_empresa(nome_empresa) if nome_empresa else None
+            if empresa:
+                # Atualiza dados adicionais apenas se a empresa foi criada agora
+                # ou se os campos estão vazios (sem conflito de unicidade)
+                cnpj = form.cleaned_data.get('cnpj', '').strip()
+                if cnpj and not Empresa.objects.filter(cnpj=cnpj).exclude(pk=empresa.pk).exists():
+                    empresa.cnpj = cnpj
+                if form.cleaned_data.get('endereco'):
+                    empresa.endereco = form.cleaned_data.get('endereco')
+                if form.cleaned_data.get('telefone_empresa'):
+                    empresa.telefone = form.cleaned_data.get('telefone_empresa')
+                if form.cleaned_data.get('email_empresa'):
+                    empresa.email = form.cleaned_data.get('email_empresa')
+                empresa.save()
 
             # Cria o perfil vinculado ao usuário
             Perfil.objects.create(
@@ -69,7 +72,16 @@ def register(request):
 def perfil(request):
     user = request.user
     Perfil.objects.get_or_create(user=user)
-    context = {'user': user,}
+    is_admin = Admin.objects.filter(user=user).exists()
+    admin_empresa = None
+    if is_admin:
+        admin_obj = Admin.objects.filter(user=user).first()
+        admin_empresa = admin_obj.empresa if admin_obj else None
+    context = {
+        'user': user,
+        'is_admin': is_admin,
+        'admin_empresa': admin_empresa,
+    }
     return render(request, 'accounts/perfil.html', context)
 
 @login_required
@@ -97,9 +109,11 @@ def deletar_perfil(request):
 
 def redefinir_senha(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
-        try:
-            user = User.objects.get(email=email)
+        email = request.POST.get('email', '').strip().lower()
+        # Busca o primeiro usuário com esse email (evita MultipleObjectsReturned
+        # quando existem vários usuários com o mesmo email no banco)
+        user = User.objects.filter(email__iexact=email).first()
+        if user is not None:
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             link = request.build_absolute_uri(
@@ -118,7 +132,7 @@ def redefinir_senha(request):
             )
             messages.success(request, 'Um e-mail de redefinição de senha foi enviado.')
             return redirect('login')
-        except User.DoesNotExist:
+        else:
             messages.error(request, 'Nenhum usuário encontrado com este e-mail.')
     return render(request, 'accounts/redefinir_senha.html')
 
@@ -178,3 +192,87 @@ def empresa_delete(request, pk):
         empresa.delete()
         return redirect('empresa_list')
     return render(request, 'accounts/empresa_confirm_delete.html', {'empresa': empresa})
+
+@login_required
+def promover_admin(request):
+    user = request.user
+    empresas = Empresa.objects.all()
+
+    # Verifica se o usuário já é admin de alguma empresa
+    admin_atual = Admin.objects.filter(user=user).first()
+
+    if request.method == 'POST':
+        empresa_id = request.POST.get('empresa')
+
+        if not empresa_id:
+            messages.error(request, 'Selecione uma empresa.')
+        else:
+            try:
+                empresa = Empresa.objects.get(pk=empresa_id)
+            except Empresa.DoesNotExist:
+                messages.error(request, 'Empresa inválida.')
+            else:
+                # Valida se a empresa já possui um admin
+                if Admin.objects.filter(empresa=empresa).exists():
+                    admin_existente = Admin.objects.get(empresa=empresa)
+                    messages.error(
+                        request,
+                        f'A empresa "{empresa.nome}" já possui um administrador: '
+                        f'"{admin_existente.user.username}". '
+                        f'Cada empresa pode ter apenas um admin.'
+                    )
+                else:
+                    # Se o usuário já é admin de outra empresa, atualiza a empresa
+                    if admin_atual:
+                        admin_atual.empresa = empresa
+                        admin_atual.save()
+                        messages.success(
+                            request,
+                            f'Você agora é administrador da empresa "{empresa.nome}"!'
+                        )
+                    else:
+                        Admin.objects.create(user=user, empresa=empresa)
+                        messages.success(
+                            request,
+                            f'Você foi promovido a administrador da empresa "{empresa.nome}"!'
+                        )
+                    return redirect('promover_admin')
+
+    context = {
+        'user': user,
+        'empresas': empresas,
+        'admins': Admin.objects.all(),
+        'admin_atual': admin_atual,
+    }
+    return render(request, 'accounts/promover_admin.html', context)
+
+@login_required
+def admin_create(request):
+    if request.method == 'POST':
+        form = AdminForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_list')
+    else:
+        form = AdminForm()
+    return render(request, 'accounts/admin_form.html', {'form': form})
+
+@login_required
+def admin_update(request, pk):
+    admin = get_object_or_404(Admin, pk=pk)
+    if request.method == 'POST':
+        form = AdminForm(request.POST, instance=admin)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_list')
+    else:
+        form = AdminForm(instance=admin)
+    return render(request, 'accounts/admin_form.html', {'form': form})
+
+@login_required
+def admin_delete(request, pk):
+    admin = get_object_or_404(Admin, pk=pk)
+    if request.method == 'POST':
+        admin.delete()
+        return redirect('admin_list')
+    return render(request, 'accounts/admin_confirm_delete.html', {'admin': admin})
