@@ -15,14 +15,14 @@
                 <fieldset class="item-formset">
                     <legend>Item {{ forloop.counter }}</legend>
                     {{ item_form.as_p }}
-                    <button type="button" class="remover-item" onclick="removerItem(this)">Remover item</button>
+                    <button type="button" class="danger" onclick="removerItem(this)">Remover item</button>
                 </fieldset>
             {% endfor %}
         </div>
         <div class="actions">
             <button type="button" id="adicionar-item" class="action-link">+ Adicionar item</button>
-            <button type="submit">Salvar venda</button>
-            <a class="action-link" href="{% url 'vendas_list' %}">Voltar</a>
+            <button type="submit" class="editar">Salvar venda</button>
+            <a class="action-link" href="{% url 'vendas_list' %}">Cancelar</a>
         </div>
     </form>
 </div>
