@@ -5,7 +5,7 @@ from rest_framework.test import APIClient
 
 from accounts.models import Empresa, Perfil
 from produtos.models import Produto
-from .models import Venda, ItemVenda
+from .models import Cliente, Venda, ItemVenda
 
 User = get_user_model()
 
@@ -141,6 +141,81 @@ class VendaNumeroSequencialTests(TestCase):
         self.assertEqual(venda1_u2.numero, 1)
         self.assertEqual(venda2_u2.numero, 2)
         self.assertEqual(venda2_u1.numero, 2)
+
+
+class ClienteViewsTests(TestCase):
+    def setUp(self):
+        self.usuario = User.objects.create_user(username='usuario1', password='senha_segura_123')
+        self.cliente = Cliente.objects.create(
+            usuario=self.usuario,
+            nome='Cliente Teste',
+            email='cliente@teste.com',
+            telefone='11999999999',
+            endereco='Rua Teste, 123'
+        )
+        self.client.force_login(self.usuario)
+
+    def test_editar_cliente_requer_autenticacao(self):
+        self.client.logout()
+        response = self.client.get(f'/vendas/clientes/{self.cliente.pk}/editar/')
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    def test_editar_cliente_get(self):
+        response = self.client.get(f'/vendas/clientes/{self.cliente.pk}/editar/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Editar cliente')
+        self.assertContains(response, 'Cliente Teste')
+
+    def test_editar_cliente_post(self):
+        response = self.client.post(f'/vendas/clientes/{self.cliente.pk}/editar/', {
+            'nome': 'Cliente Atualizado',
+            'email': 'atualizado@teste.com',
+            'telefone': '11988888888',
+            'endereco': 'Rua Nova, 456'
+        })
+        self.assertRedirects(response, '/vendas/clientes/')
+        self.cliente.refresh_from_db()
+        self.assertEqual(self.cliente.nome, 'Cliente Atualizado')
+        self.assertEqual(self.cliente.email, 'atualizado@teste.com')
+
+    def test_editar_cliente_nao_permite_editar_cliente_de_outro_usuario(self):
+        outro_usuario = User.objects.create_user(username='usuario2', password='senha_segura_123')
+        cliente_outro = Cliente.objects.create(
+            usuario=outro_usuario,
+            nome='Cliente Outro',
+            email='outro@teste.com'
+        )
+        response = self.client.get(f'/vendas/clientes/{cliente_outro.pk}/editar/')
+        self.assertEqual(response.status_code, 404)
+
+    def test_deletar_cliente_requer_autenticacao(self):
+        self.client.logout()
+        response = self.client.get(f'/vendas/clientes/{self.cliente.pk}/excluir/')
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    def test_deletar_cliente_get(self):
+        response = self.client.get(f'/vendas/clientes/{self.cliente.pk}/excluir/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Excluir cliente')
+        self.assertContains(response, 'Cliente Teste')
+
+    def test_deletar_cliente_post(self):
+        response = self.client.post(f'/vendas/clientes/{self.cliente.pk}/excluir/')
+        self.assertRedirects(response, '/vendas/clientes/')
+        self.assertFalse(Cliente.objects.filter(pk=self.cliente.pk).exists())
+
+    def test_deletar_cliente_nao_permite_deletar_cliente_de_outro_usuario(self):
+        outro_usuario = User.objects.create_user(username='usuario2', password='senha_segura_123')
+        cliente_outro = Cliente.objects.create(
+            usuario=outro_usuario,
+            nome='Cliente Outro',
+            email='outro@teste.com'
+        )
+        response = self.client.post(f'/vendas/clientes/{cliente_outro.pk}/excluir/')
+        self.assertEqual(response.status_code, 404)
+        self.assertTrue(Cliente.objects.filter(pk=cliente_outro.pk).exists())
 
 
 class VendaEstoqueTests(TestCase):
