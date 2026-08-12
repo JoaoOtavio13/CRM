@@ -21,6 +21,10 @@
                     {% if cliente.telefone %}<div class="meta">Tel: {{ cliente.telefone }}</div>{% endif %}
                     {% if cliente.endereco %}<div class="meta">{{ cliente.endereco }}</div>{% endif %}
                 </div>
+                <div class="actions">
+                    <a class="action-link editar" href="{% url 'editar_cliente' cliente.pk %}">Editar</a>
+                    <a class="action-link danger" href="{% url 'deletar_cliente' cliente.pk %}">Excluir</a>
+                </div>
             </li>
         {% empty %}
             <li class="list-item">Nenhum cliente cadastrado.</li>
