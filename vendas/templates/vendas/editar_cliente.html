@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Editar Cliente | Vendas CRM{% endblock %}
+
+{% block content %}
+<section>
+    <div class="actions" style="justify-content: space-between; margin-bottom: 18px;">
+        <div>
+            <p class="eyebrow">Clientes</p>
+            <h2>Editar cliente</h2>
+        </div>
+        <a class="action-link" href="{% url 'clientes_list' %}">Voltar</a>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="actions">
+            <button type="submit" class="editar">Salvar alterações</button>
+            <a class="action-link" href="{% url 'clientes_list' %}">Cancelar</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

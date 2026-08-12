@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Excluir Cliente | Vendas CRM{% endblock %}
+
+{% block content %}
+<section>
+    <div class="actions" style="justify-content: space-between; margin-bottom: 18px;">
+        <div>
+            <p class="eyebrow">Clientes</p>
+            <h2>Excluir cliente</h2>
+        </div>
+        <a class="action-link" href="{% url 'clientes_list' %}">Voltar</a>
+    </div>
+
+    <p>Tem certeza que deseja excluir o cliente <strong>{{ cliente.nome }}</strong>?</p>
+    <p>Esta ação não poderá ser desfeita.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="actions">
+            <button type="submit" class="danger">Excluir</button>
+            <a class="action-link" href="{% url 'clientes_list' %}">Cancelar</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
