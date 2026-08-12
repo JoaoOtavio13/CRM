@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.contrib import messages
+from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from accounts.models import Admin
 from produtos.models import Produto
 from vendas.models import Venda
 # Create your views here.
@@ -13,7 +15,14 @@ def about(request):
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "core/dashboard.html"
-    
+
+    def dispatch(self, request, *args, **kwargs):
+        # Apenas admin (superuser ou registrado no modelo Admin) pode acessar
+        if not (request.user.is_superuser or Admin.objects.filter(user=request.user).exists()):
+            messages.error(request, 'Acesso restrito. Apenas administradores podem acessar o dashboard.')
+            return redirect('index')
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user

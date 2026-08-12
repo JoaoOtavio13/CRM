@@ -8,3 +8,7 @@ class PerfilAdmin(admin.ModelAdmin):
 @admin.register(Empresa)
 class EmpresaAdmin(admin.ModelAdmin):
     list_display = ('nome', 'cnpj', 'endereco', 'telefone', 'email')
+
+@admin.register(Admin)
+class AdminAdmin(admin.ModelAdmin):
+    list_display = ('user', 'empresa')

@@ -3,6 +3,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from accounts.models import Empresa, Perfil
 from produtos.models import Produto
 from .models import Venda, ItemVenda
 
@@ -12,6 +13,15 @@ User = get_user_model()
 class FaturamentoAPITests(TestCase):
     def setUp(self):
         self.usuario = User.objects.create_user(username='usuario1', password='senha_segura_123')
+        self.empresa = Empresa.objects.create(nome='Empresa do Usuário', cnpj='12345678000100')
+        Perfil.objects.create(
+            user=self.usuario,
+            nome='Dono',
+            telefone='11999999999',
+            cargo='Admin',
+            cpf='12345678901',
+            empresa=self.empresa,
+        )
         self.client = APIClient()
         self.client.force_authenticate(user=self.usuario)
 
@@ -43,6 +53,26 @@ class FaturamentoAPITests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['total_faturamento'], '0.00')
         self.assertEqual(response.data['total_vendas'], 0)
+
+    def test_faturamento_restringe_acesso_ao_dono_da_empresa(self):
+        empresa = Empresa.objects.create(nome='Empresa Teste', cnpj='12345678000199')
+        self.usuario_perfil = Perfil.objects.get(user=self.usuario)
+        self.usuario_perfil.empresa = empresa
+        self.usuario_perfil.save(update_fields=['empresa'])
+
+        outro_usuario = User.objects.create_user(username='usuario2', password='senha_segura_123')
+        Perfil.objects.create(user=outro_usuario, nome='Vendedor', telefone='11988888888', cargo='Vendedor', cpf='10987654321', empresa=empresa, is_dono=False)
+
+        produto = Produto.objects.create(usuario=self.usuario, nome='Notebook', descricao='Teste', preco='100.00', estoque=10)
+        venda = Venda.objects.create(usuario=self.usuario)
+        ItemVenda.objects.create(venda=venda, produto=produto, quantidade=2)
+        venda.refresh_from_db()
+
+        client = APIClient()
+        client.force_authenticate(user=outro_usuario)
+
+        response = client.get('/api/faturamento/')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class VendaListAPITests(TestCase):

@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect, get_object_or_404
+from accounts.decorators import admin_required
 from .models import Cliente, Venda
 from .forms import ItemVendaFormSet, ClienteForm, VendaForm
 
@@ -56,6 +57,7 @@ def venda_delete(request, pk):
 
 
 @login_required
+@admin_required
 def faturamento(request):
     vendas = Venda.objects.filter(usuario=request.user)
     total_faturamento = sum((venda.total for venda in vendas), Decimal('0.00'))

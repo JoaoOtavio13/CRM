@@ -22,4 +22,15 @@ class Perfil(models.Model):
     cpf = models.CharField(max_length=11)
     imagem = models.ImageField(upload_to='perfis/', blank=True, null=True)
     empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, related_name='perfis', null=True, blank=True)
-    
+
+class Admin(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, related_name='admins')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['empresa'], name='unique_admin_per_empresa')
+        ]
+
+    def __str__(self):
+        return f"{self.user.username} - {self.empresa.nome}"

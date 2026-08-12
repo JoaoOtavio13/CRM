@@ -19,10 +19,14 @@
             </div>
             <nav class="nav-links">
                 <a href="{% url 'index' %}">Inicio</a>
-                <a href="{% url 'dashboard' %}">Dashboard</a>
+                {% if is_admin %}
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                {% endif %}
                 <a href="{% url 'produto_list' %}">Produtos</a>
                 <a href="{% url 'vendas_list' %}">Vendas</a>
-                <a href="{% url 'faturamento' %}">Faturamento</a>
+                {% if is_admin %}
+                    <a href="{% url 'faturamento' %}">Faturamento</a>
+                {% endif %}
                 <a href="{% url 'perfil' %}">Perfil</a>
                 <a href="{% url 'clientes_list' %}">Clientes</a>
             </nav>

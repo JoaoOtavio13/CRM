@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from accounts.decorators import admin_required
 from produtos.forms import ProdutoForm
 from .models import *
 
@@ -17,6 +18,7 @@ def produto_detail_view(request, pk):
 
 
 @login_required
+@admin_required
 def produto_update_view(request, pk):
     produto = get_object_or_404(Produto, pk=pk, usuario=request.user)
     if request.method == 'POST':
@@ -30,6 +32,7 @@ def produto_update_view(request, pk):
 
 
 @login_required
+@admin_required
 def produto_create(request):
     if request.method == 'POST':
         form = ProdutoForm(request.POST, request.FILES)
@@ -44,6 +47,7 @@ def produto_create(request):
 
 
 @login_required
+@admin_required
 def produto_delete(request, pk):
     produto = get_object_or_404(Produto, pk=pk, usuario=request.user)
     if request.method == 'POST':
@@ -57,6 +61,7 @@ def categoria_list_view(request):
     return render(request, 'produtos/categoria_list.html', {'categorias': categorias})
 
 @login_required
+@admin_required
 def categoria_create(request):
     if request.method == 'POST':
         nome = request.POST.get('nome')
@@ -67,6 +72,7 @@ def categoria_create(request):
     return render(request, 'produtos/categoria_form.html')
 
 @login_required
+@admin_required
 def categoria_update_view(request, pk):
     categoria = get_object_or_404(Categoria, pk=pk)
     if request.method == 'POST':
@@ -77,6 +83,7 @@ def categoria_update_view(request, pk):
     return render(request, 'produtos/categoria_form.html', {'categoria': categoria})
 
 @login_required
+@admin_required
 def categoria_delete(request, pk):
     categoria = get_object_or_404(Categoria, pk=pk)
     if request.method == 'POST':

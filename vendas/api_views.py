@@ -3,6 +3,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from accounts.permissions import IsEmpresaAdmin
 from .models import Venda
 from .serializers import VendaSerializer
 
@@ -10,8 +12,9 @@ from .serializers import VendaSerializer
 class FaturamentoAPIView(APIView):
     """
     Endpoint para listar o faturamento do usuário logado.
+    O acesso é restrito ao dono da empresa vinculada ao perfil.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsEmpresaAdmin]
 
     def get(self, request):
         vendas = Venda.objects.filter(usuario=request.user)
