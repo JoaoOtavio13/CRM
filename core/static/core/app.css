@@ -418,6 +418,20 @@ input:focus, select:focus, textarea:focus {
     padding-left: 18px;
 }
 
+/* Botão de submit do formulário de login (cor primary do tema) */
+form button[type="submit"] {
+    background: linear-gradient(180deg, var(--primary), var(--primary-strong));
+    color: #04111f;
+    font-weight: 700;
+    border-color: rgba(98, 208, 255, 0.6);
+    box-shadow: 0 10px 24px rgba(98, 208, 255, 0.22);
+}
+
+form button[type="submit"]:hover {
+    border-color: rgba(98, 208, 255, 0.9);
+    box-shadow: 0 14px 30px rgba(98, 208, 255, 0.3);
+}
+
 /* Campo de senha com botão de visualizar */
 .password-field {
     position: relative;

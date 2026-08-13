@@ -2,8 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
-
-from accounts.models import Empresa, Perfil
+from accounts.models import Admin, Empresa, Perfil
 from produtos.models import Produto
 from .models import Cliente, Venda, ItemVenda
 
@@ -31,6 +30,7 @@ class FaturamentoAPITests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_faturamento_retorna_total_do_usuario_logado(self):
+        Admin.objects.create(user=self.usuario, empresa=self.empresa)
         produto = Produto.objects.create(usuario=self.usuario, nome='Notebook', descricao='Teste', preco='100.00', estoque=10)
         venda = Venda.objects.create(usuario=self.usuario)
         ItemVenda.objects.create(venda=venda, produto=produto, quantidade=2)
@@ -43,6 +43,7 @@ class FaturamentoAPITests(TestCase):
         self.assertEqual(response.data['total_vendas'], 1)
 
     def test_faturamento_nao_inclui_vendas_de_outros_usuarios(self):
+        Admin.objects.create(user=self.usuario, empresa=self.empresa)
         outro_usuario = User.objects.create_user(username='usuario2', password='senha_segura_123')
         produto = Produto.objects.create(usuario=self.usuario, nome='Notebook', descricao='Teste', preco='100.00', estoque=10)
         venda_outro = Venda.objects.create(usuario=outro_usuario)
@@ -60,14 +61,25 @@ class FaturamentoAPITests(TestCase):
         self.usuario_perfil.empresa = empresa
         self.usuario_perfil.save(update_fields=['empresa'])
 
+        # Usuário 1 é promovido a Admin (dono) da nova empresa
+        Admin.objects.create(user=self.usuario, empresa=empresa)
+
         outro_usuario = User.objects.create_user(username='usuario2', password='senha_segura_123')
-        Perfil.objects.create(user=outro_usuario, nome='Vendedor', telefone='11988888888', cargo='Vendedor', cpf='10987654321', empresa=empresa, is_dono=False)
+        Perfil.objects.create(
+            user=outro_usuario,
+            nome='Vendedor',
+            telefone='11988888888',
+            cargo='Vendedor',
+            cpf='10987654321',
+            empresa=empresa,
+        )
 
         produto = Produto.objects.create(usuario=self.usuario, nome='Notebook', descricao='Teste', preco='100.00', estoque=10)
         venda = Venda.objects.create(usuario=self.usuario)
         ItemVenda.objects.create(venda=venda, produto=produto, quantidade=2)
         venda.refresh_from_db()
 
+        # Outro usuário tem perfil na mesma empresa mas não é admin → deve ser negado
         client = APIClient()
         client.force_authenticate(user=outro_usuario)
 
