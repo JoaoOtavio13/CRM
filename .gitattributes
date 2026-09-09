@@ -1,0 +1,21 @@
+# Treat typical source/text files as text for cleaner diffs
+*.py    text eol=lf
+*.html  text eol=lf
+*.css   text eol=lf
+*.js    text eol=lf
+*.md    text eol=lf
+*.txt   text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.cfg   text
+*.ini   text
+
+# Force text handling for requirement files (historically UTF-16 encoded)
+requirements.txt text
+
+# Mark lock/secrets/artifacts as binary or exclude from diff where needed
+*.sqlite3 binary
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
