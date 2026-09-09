@@ -11,7 +11,6 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
 
-
 # Create your views here.
 def login_view(request):
     if request.method == 'POST':
@@ -34,7 +33,11 @@ def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
-            user = form.save()
+            if not request.user.is_authenticated:
+                user = form.save()
+                login(request, user)
+            else:
+                user = form.save()
 
             # Processa a empresa (busca ou cria se não existir)
             nome_empresa = form.cleaned_data.get('empresa_nome', '').strip()
