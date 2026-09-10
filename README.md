@@ -117,13 +117,21 @@ http://127.0.0.1:8000/
 
 ## Execução via Docker
 
-O projeto já inclui um `Dockerfile` e um `docker-compose.yml` com configuração para subir a aplicação em container.
+O projeto já inclui os arquivos de Docker versionados no repositório:
+
+- `Dockerfile` — imagem da aplicação (Python 3.12)
+- `docker-compose.yml` — orquestração do ambiente
+- `.dockerignore` — arquivos excluídos do build da imagem
+
+> **Importante:** o `docker-compose.yml` usa `env_file: .env`. Antes de subir o ambiente, crie o arquivo `.env` na raiz do projeto conforme a seção [Configuração inicial](#configuração-inicial) — caso contrário o compose falhará por variáveis de ambiente ausentes.
 
 ### 1) Subir o ambiente
 
 ```bash
 docker compose up --build
 ```
+
+O comando aplica as migrações do banco e sobe o servidor de desenvolvimento, montando a pasta do projeto em `/app` e expondo a porta `8000`.
 
 ### 2) Acesso
 
@@ -135,6 +143,16 @@ http://localhost:8000/
 
 ```bash
 docker compose down
+```
+
+> O arquivo `.env` **não é versionado** e fica apenas no ambiente local (ele é ignorado pelo git e pelo Docker).
+
+## Execução dos testes
+
+Para rodar a suíte de testes unitários do projeto (usa um banco em memória):
+
+```bash
+python manage.py test
 ```
 
 ## Rotas principais
