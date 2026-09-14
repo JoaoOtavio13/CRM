@@ -77,17 +77,60 @@ pip install -r requirements.txt
 
 ### 4) Configure o arquivo de ambiente
 
-Crie um arquivo `.env` na raiz do projeto com as variáveis abaixo:
+O projeto inclui um arquivo **`.env.example`** na raiz, que serve como **modelo das variáveis de ambiente** necessárias para a aplicação. Veja abaixo o que ele é, para que serve e como utilizá-lo.
+
+#### O que é o `.env.example`?
+
+É um arquivo de exemplo que lista todas as variáveis que o projeto espera no ambiente, acompanhadas de *placeholders* (valores fictícios) e comentários explicativos:
 
 ```env
+# --- Django core ---
+SECRET_KEY=change-me-a-secure-random-string
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# --- Email (SMTP) ---
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USE_TLS=True
-EMAIL_HOST_USER=seu-email@gmail.com
-EMAIL_HOST_PASSWORD=sua-senha-de-app
+EMAIL_HOST_USER=tu-email@example.com
+EMAIL_HOST_PASSWORD=tu-contraseña-de-app
 ```
 
-> Ajuste os valores de acordo com o provedor de e-mail que estiver usando. Se estiver utilizando Gmail, normalmente é necessário gerar uma senha de app.
+#### Para que serve?
+
+- **Documenta as configurações esperadas**: mostra a quem for configurar o projeto exatamente quais variáveis existem (segredos do Django, modo de depuração, hosts permitidos e credenciais de e-mail) e seus significados.
+- **Serve de ponto de partida**: ao invés de digitar tudo do zero, você copia este arquivo e apenas preenche os valores reais.
+- **É seguro de versionar**: contém apenas valores de exemplo, sem dados reais, então pode ficar no repositório. Já o `.env`, com dados reais, **nunca** deve ser versionado.
+
+#### Como utilizar?
+
+1. **Copie** o `.env.example` para um arquivo chamado `.env` na raiz do projeto:
+
+   No Windows (PowerShell):
+
+   ```powershell
+   copy .env.example .env
+   ```
+
+   No Linux/macOS:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Edite** o `.env` preenchendo cada variável com seus valores reais:
+
+   - `SECRET_KEY` — chave secreta do Django; use um valor aleatório seguro (ex.: gere em <https://djecrety.herokuapp.com/>).
+   - `DEBUG` — `True` apenas em desenvolvimento; em produção use **sempre** `False`.
+   - `ALLOWED_HOSTS` — hosts permitidos, separados por vírgula e sem espaços (ex.: `localhost,127.0.0.1`).
+   - `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USE_TLS`, `EMAIL_HOST_USER` e `EMAIL_HOST_PASSWORD` — credenciais SMTP do provedor de e-mail (ex.: Gmail, usando uma senha de app).
+
+   > Ajuste os valores de acordo com o provedor de e-mail que estiver usando. Se estiver utilizando Gmail, normalmente é necessário gerar uma senha de app.
+
+3. **Mantenha o `.env` fora do versionamento**: ele é ignorado pelo git e pelo Docker e deve ficar somente no ambiente local, **nunca** compartilhado publicamente.
+
+> **Dica:** se precisar usar múltiplos ambientes (local, staging, produção), crie um `.env` específico para cada um, baseado sempre no `.env.example`.
 
 ## Execução local
 
