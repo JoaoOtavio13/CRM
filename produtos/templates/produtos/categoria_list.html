@@ -22,6 +22,7 @@
 				<div class="actions">
 					<a class="action-link editar" href="{% url 'editar_categoria' categoria.pk %}">Editar</a>
 					<a class="action-link danger" href="{% url 'categoria_delete' categoria.pk %}">Excluir</a>
+					<a class="action-link" href="{% url 'produto_list' %}">Voltar</a>
 				</div>
 			</li>
 		{% empty %}
