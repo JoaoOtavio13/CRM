@@ -8,6 +8,13 @@
 	<h2>{{ produto.nome }}</h2>
 	<div class="grid cols-2">
 		<div>
+			{% if produto.imagem %}
+				<img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" class="list-item-image">
+			{% else %}
+				<img alt="Sem imagem" class="list-item-image">
+			{% endif %}
+		</div>
+		<div>
 			<p class="muted">Descricao</p>
 			<p>{{ produto.descricao }}</p>
 		</div>

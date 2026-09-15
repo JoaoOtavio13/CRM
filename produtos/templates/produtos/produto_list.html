@@ -21,6 +21,11 @@
 		{% for produto in produtos %}
 			<li class="list-item">
 				<div>
+					{% if produto.imagem %}
+					<div class="list-item-header">
+						<img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" class="list-item-image">
+					</div>
+					{% endif %}
 					<strong>{{ produto.nome }}</strong>
 					<div class="meta">Estoque: {{ produto.estoque }} | Preco: R$ {{ produto.preco }}</div>
 					{% if produto.categoria %}
