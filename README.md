@@ -93,8 +93,8 @@ ALLOWED_HOSTS=localhost,127.0.0.1
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USE_TLS=True
-EMAIL_HOST_USER=tu-email@example.com
-EMAIL_HOST_PASSWORD=tu-contraseña-de-app
+EMAIL_HOST_USER=seu-email@example.com
+EMAIL_HOST_PASSWORD=sua-senha-de-app
 ```
 
 #### Para que serve?
@@ -189,6 +189,79 @@ docker compose down
 ```
 
 > O arquivo `.env` **não é versionado** e fica apenas no ambiente local (ele é ignorado pelo git e pelo Docker).
+
+## Deploy no Render
+
+O projeto está preparado para deploy no [Render](https://render.com) com **Python nativo**, **PostgreSQL gerenciado** e **Cloudinary** para os uploads.
+
+### Arquivos usados no deploy
+
+- `render.yaml` — Blueprint que descreve o banco de dados e o serviço web.
+- `build.sh` — passos de build (`pip install`, `collectstatic` e `migrate`).
+- `.python-version` — fixa a versão do Python usada pelo Render.
+- `main/storage_backends.py` — storage do Cloudinary para os arquivos de mídia.
+
+> O banco local (`db.sqlite3`) continua sendo usado no desenvolvimento e **não é enviado** ao Render. Em produção o `DATABASE_URL` aponta para o PostgreSQL e o banco começa vazio (as tabelas são criadas pelas migrações).
+
+### 1) Crie a conta no Cloudinary
+
+1. Crie uma conta gratuita em <https://cloudinary.com>.
+2. No dashboard, copie o **Cloud name**, a **API Key** e o **API Secret**.
+
+### 2) Crie o Blueprint no Render
+
+1. Crie uma conta no Render e conecte o repositório do GitHub.
+2. Acesse **New → Blueprint**, selecione o repositório e a branch `main`.
+3. O Render lê o `render.yaml` e provisiona o PostgreSQL e o serviço web.
+4. Preencha as variáveis marcadas como secretas: `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` e `CLOUDINARY_API_SECRET`.
+
+> A `SECRET_KEY` é gerada automaticamente pelo Render e o `DATABASE_URL` é vinculado ao banco criado.
+
+### 3) Alternativa: criar o serviço manualmente
+
+Em **New → Web Service**, use:
+
+- **Runtime:** Python
+- **Build Command:** `bash build.sh`
+- **Start Command:** `gunicorn main.wsgi:application`
+- **Health Check Path:** `/`
+
+Depois crie um **New → PostgreSQL** e copie a connection string para a variável `DATABASE_URL`.
+
+### 4) Variáveis de ambiente
+
+| Variável | Valor |
+| --- | --- |
+| `SECRET_KEY` | string aleatória e segura |
+| `DEBUG` | `False` |
+| `PYTHON_VERSION` | `3.12.10` |
+| `ALLOWED_HOSTS` | `.onrender.com` |
+| `DATABASE_URL` | connection string do PostgreSQL |
+| `EMAIL_HOST` | `smtp.gmail.com` |
+| `EMAIL_PORT` | `587` |
+| `EMAIL_USE_TLS` | `True` |
+| `EMAIL_HOST_USER` | seu e-mail |
+| `EMAIL_HOST_PASSWORD` | senha de app do e-mail |
+| `CLOUDINARY_CLOUD_NAME` | cloud name do Cloudinary |
+| `CLOUDINARY_API_KEY` | API key do Cloudinary |
+| `CLOUDINARY_API_SECRET` | API secret do Cloudinary |
+
+> `ALLOWED_HOSTS` e `CSRF_TRUSTED_ORIGINS` são completados automaticamente a partir de `RENDER_EXTERNAL_HOSTNAME`, que o Render injeta em tempo de execução.
+
+### 5) Crie o superusuário
+
+No painel do Render, abra o **Shell** do serviço e execute:
+
+```bash
+python manage.py createsuperuser
+```
+
+### 6) Valide o deploy
+
+- Acesse `https://<seu-app>.onrender.com/`.
+- Faça login e cadastre um produto com imagem, conferindo se o arquivo aparece no dashboard do Cloudinary.
+
+> Após o primeiro deploy, cada push na branch `main` dispara um novo deploy automaticamente (`autoDeploy`).
 
 ## Execução dos testes
 
