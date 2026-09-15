@@ -9,6 +9,7 @@
 *.yaml  text eol=lf
 *.cfg   text
 *.ini   text
+*.sh    text eol=lf
 
 # Force text handling for requirement files (historically UTF-16 encoded)
 requirements.txt text
