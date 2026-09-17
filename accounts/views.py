@@ -122,18 +122,32 @@ def redefinir_senha(request):
             link = request.build_absolute_uri(
                 reverse('password_reset_confirm', args=[uid, token])
             )
-            send_mail(
-                'Redefinição de Senha',
+            mensagem = (
                 f'Olá {user.username},\n\n'
                 f'Recebemos uma solicitação para redefinir sua senha.\n\n'
                 f'Clique no link abaixo para redefinir sua senha:\n'
                 f'{link}\n\n'
                 f'Se você não solicitou esta alteração, ignore este e-mail.\n\n'
-                f'Atenciosamente,\nEquipe Vendas CRM',
-                settings.DEFAULT_FROM_EMAIL,
-                [user.email],
+                f'Atenciosamente,\nEquipe Vendas CRM'
             )
-            messages.success(request, 'Um e-mail de redefinição de senha foi enviado.')
+            try:
+                send_mail(
+                    'Redefinição de Senha',
+                    mensagem,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [user.email],
+                )
+                messages.success(request, 'Um e-mail de redefinição de senha foi enviado.')
+            except Exception as e:
+                # Evita erro 500 genérico e registra o motivo real no log do servidor
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.error(f'Falha ao enviar e-mail de redefinição para {user.email}: {e}')
+                messages.error(
+                    request,
+                    'Não foi possível enviar o e-mail agora. Tente novamente em alguns minutos.'
+                )
+            return redirect('login')
             return redirect('login')
         else:
             messages.error(request, 'Nenhum usuário encontrado com este e-mail.')
