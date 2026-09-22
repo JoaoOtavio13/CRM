@@ -240,3 +240,7 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# Evita que o request trave indefinidamente se o SMTP estiver lento/bloqueado.
+# O timeout é levantado como exceção e capturado pelo try/except em views,
+# devolvendo uma resposta amigável em vez de um 500 por gateway timeout.
+EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=10, cast=int)
