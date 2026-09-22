@@ -9,6 +9,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+variaveis_ambiente/
 
 # Django
 *.log
@@ -30,3 +31,6 @@ Thumbs.db
 # Environment
 .env
 .env.local
+
+# Debug scripts
+variaveis_ambiente.py
