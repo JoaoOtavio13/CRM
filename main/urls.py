@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -30,6 +31,9 @@ urlpatterns = [
     path('api/', include('produtos.api_urls')),
     path('api/', include('vendas.api_urls')),
     # EMAIL
+    # Swagger / OpenAPI
+    path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='api-schema'), name='swagger-ui'),
     path('email/', include('envia_email.urls')),
 ]
 
